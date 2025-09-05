@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mapa Interactivo</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+        }
+
+        .menu {
+            margin: 10px;
+        }
+
+        button {
+            margin-right: 5px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="menu">
+        <button onclick="irATerritorio(1)">Territorio 1</button>
+        <button onclick="irATerritorio(2)">Territorio 2</button>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. Crear el mapa
+        var map = L.map('map').setView([19.4, -99.1], 13); // cambia a tus coordenadas iniciales
+
+        // 2. Capa de mapa base (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // 3. Dibujar polígonos
+        var poligonos = [];
+
+        // Territorio 1
+        var territorio1 = L.polygon([
+            [28.613562974530737, -106.08048829467542],
+            [28.61539747524567, -106.07917922815592],
+            [28.613668849186666, -106.0760963375128],
+            [28.611852985984775, -106.07746212871378]
+        ], { color: 'red' }).addTo(map);
+        poligonos.push(territorio1);
+
+        // Territorio 2
+        var territorio2 = L.polygon([
+            [28.611224414563456, -106.07862231512406],
+            [28.60974018372891, -106.07604329824093],
+            [28.60794753155253, -106.07738919724586],
+            [28.60945502004427, -106.07999470402711]
+        ], { color: 'blue' }).addTo(map);
+        poligonos.push(territorio2);
+
+        // 4. Función para ir a cada territorio
+        function irATerritorio(numero) {
+            var poly = poligonos[numero - 1];
+            map.fitBounds(poly.getBounds());
+        }
+    </script>
+
+</body>
+
+</html>
