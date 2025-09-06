@@ -13,13 +13,20 @@
         height: 950px;
       }
 
+      /* Menú fijo para que siempre se vea */
       .menu {
-        margin: 15px;
+        position: fixed; /* flota sobre el mapa */
+        top: 10px; /* distancia desde arriba */
+        left: 10px; /* distancia desde la izquierda */
+        z-index: 1000; /* siempre encima del mapa */
+        background: rgba(255, 255, 255, 0.85); /* semitransparente */
+        padding: 5px;
+        border-radius: 5px;
       }
 
       button {
         margin-right: 5px;
-        padding: 1px 1px;
+        padding: 10px 1px;
       }
     </style>
   </head>
@@ -34,12 +41,12 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      // 1. Crear el mapa con zoom máximo alto y zoom inicial fijo
+      // Crear el mapa con zoom máximo alto y zoom inicial fijo
       var map = L.map("map", {
         maxZoom: 22,
-      }).setView([28.609, -106.071], 16); // ajusta el zoom inicial como quieras
+      }).setView([28.609, -106.071], 16);
 
-      // 2. Popups de coordenadas que desaparecen al clicar en otro lado
+      // Popups de coordenadas que desaparecen al clicar en otro lado
       map.on("click", function (e) {
         L.popup()
           .setLatLng(e.latlng)
@@ -47,13 +54,13 @@
           .openOn(map);
       });
 
-      // 3. Capa base
+      // Capa base
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap",
         maxZoom: 22,
       }).addTo(map);
 
-      // 4. Dibujar territorios
+      // Dibujar territorios
       var poligonos = [];
 
       var territorio1 = L.polygon(
@@ -78,18 +85,14 @@
       ).addTo(map);
       poligonos.push(territorio2);
 
-      // 5. Área grande (inicio)
+      // Área grande (inicio)
       var areaGrande = [
-        //FLORES MAGON
         [28.613787, -106.087224],
         [28.613295, -106.086948],
-        //CALLE 58
         [28.604131, -106.070702],
         [28.603705, -106.070422],
-        //ZUBIRAN
         [28.604303, -106.069846],
         [28.606603, -106.068186],
-        //CALLE 52a
         [28.6028, -106.061526],
         [28.602881975502765, -106.05953285496156],
         [28.604779574435852, -106.05874390193632],
@@ -128,10 +131,7 @@
         fillOpacity: 0.05,
       }).addTo(map);
 
-      // No usamos fitBounds para que no cambie el zoom exageradamente
-      // map.fitBounds(areaGrande);
-
-      // 6. Función para moverse a un territorio específico
+      // Función para moverse a un territorio específico
       function irATerritorio(numero) {
         var poly = poligonos[numero - 1];
         map.fitBounds(poly.getBounds());
