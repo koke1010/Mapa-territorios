@@ -17,18 +17,39 @@
         height: 950px;
       }
       .menu {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.85);
-        padding: 5px;
-        border-radius: 5px;
-      }
-      button {
-        margin: 3px;
-        padding: 8px 12px;
-      }
+  position: fixed;
+  top: 1vh;           /* 1% del alto de la ventana */
+  left: 1vw;          /* 1% del ancho de la ventana */
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.5em;     /* relativo al tamaño de fuente */
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;    /* permite que los botones bajen de línea si hace falta */
+}
+
+button {
+  margin: 2px;
+  padding: 5px 5px;
+  font-size: 10px;
+}
+
+.leaflet-draw.leaflet-control {
+  margin-top: 5vh !important; /* baja los botones del plugin de dibujo relativo a la ventana */
+}
+
+/* Media queries opcionales para pantallas muy chicas */
+@media (max-width: 600px) {
+  .menu {
+    top: 0.5vh;
+    left: 0.5vw;
+    padding: 0.3em;
+  }
+  button {
+    padding: 0.3em 0.6em;
+    font-size: 0.9em;
+  }
+}
       .leaflet-draw.leaflet-control {
         margin-top: 100px !important;
       }
@@ -57,12 +78,6 @@
         attribution: "© OpenStreetMap",
         maxZoom: 22,
       }).addTo(map);
-      map.on("click", (e) =>
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(`${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`)
-          .openOn(map)
-      );
 
       var poligonos = [];
 
