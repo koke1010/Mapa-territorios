@@ -1,76 +1,141 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Mapa Interactivo</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <style>
-        #map {
-            height: 600px;
-        }
+      #map {
+        height: 950px;
+      }
 
-        .menu {
-            margin: 10px;
-        }
+      .menu {
+        margin: 15px;
+      }
 
-        button {
-            margin-right: 5px;
-            padding: 5px 10px;
-        }
+      button {
+        margin-right: 5px;
+        padding: 1px 1px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="menu">
-        <button onclick="irATerritorio(1)">Territorio 1</button>
-        <button onclick="irATerritorio(2)">Territorio 2</button>
+      <button onclick="irATerritorio(1)">Territorio 1</button>
+      <button onclick="irATerritorio(2)">Territorio 2</button>
     </div>
 
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Crear el mapa
-        var map = L.map('map').setView([19.4, -99.1], 13); // cambia a tus coordenadas iniciales
+      // 1. Crear el mapa con zoom máximo alto y zoom inicial fijo
+      var map = L.map("map", {
+        maxZoom: 22,
+      }).setView([28.609, -106.071], 16); // ajusta el zoom inicial como quieras
 
-        // 2. Capa de mapa base (OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+      // 2. Popups de coordenadas que desaparecen al clicar en otro lado
+      map.on("click", function (e) {
+        L.popup()
+          .setLatLng(e.latlng)
+          .setContent(e.latlng.lat.toFixed(6) + ", " + e.latlng.lng.toFixed(6))
+          .openOn(map);
+      });
 
-        // 3. Dibujar polígonos
-        var poligonos = [];
+      // 3. Capa base
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap",
+        maxZoom: 22,
+      }).addTo(map);
 
-        // Territorio 1
-        var territorio1 = L.polygon([
-            [28.613562974530737, -106.08048829467542],
-            [28.61539747524567, -106.07917922815592],
-            [28.613668849186666, -106.0760963375128],
-            [28.611852985984775, -106.07746212871378]
-        ], { color: 'red' }).addTo(map);
-        poligonos.push(territorio1);
+      // 4. Dibujar territorios
+      var poligonos = [];
 
-        // Territorio 2
-        var territorio2 = L.polygon([
-            [28.611224414563456, -106.07862231512406],
-            [28.60974018372891, -106.07604329824093],
-            [28.60794753155253, -106.07738919724586],
-            [28.60945502004427, -106.07999470402711]
-        ], { color: 'blue' }).addTo(map);
-        poligonos.push(territorio2);
+      var territorio1 = L.polygon(
+        [
+          [28.613562974530737, -106.08048829467542],
+          [28.61539747524567, -106.07917922815592],
+          [28.613668849186666, -106.0760963375128],
+          [28.611852985984775, -106.07746212871378],
+        ],
+        { color: "red" }
+      ).addTo(map);
+      poligonos.push(territorio1);
 
-        // 4. Función para ir a cada territorio
-        function irATerritorio(numero) {
-            var poly = poligonos[numero - 1];
-            map.fitBounds(poly.getBounds());
-        }
+      var territorio2 = L.polygon(
+        [
+          [28.611224414563456, -106.07862231512406],
+          [28.60974018372891, -106.07604329824093],
+          [28.60794753155253, -106.07738919724586],
+          [28.60945502004427, -106.07999470402711],
+        ],
+        { color: "blue" }
+      ).addTo(map);
+      poligonos.push(territorio2);
+
+      // 5. Área grande (inicio)
+      var areaGrande = [
+        //FLORES MAGON
+        [28.613787, -106.087224],
+        [28.613295, -106.086948],
+        //CALLE 58
+        [28.604131, -106.070702],
+        [28.603705, -106.070422],
+        //ZUBIRAN
+        [28.604303, -106.069846],
+        [28.606603, -106.068186],
+        //CALLE 52a
+        [28.6028, -106.061526],
+        [28.602881975502765, -106.05953285496156],
+        [28.604779574435852, -106.05874390193632],
+        [28.60182263530877, -106.05546878357532],
+        [28.601944877930585, -106.05389750729248],
+        [28.60312924346816, -106.05274164625555],
+        [28.610206680217797, -106.06091458576194],
+        [28.610602521924587, -106.06047643947666],
+        [28.611414006652716, -106.06165333258592],
+        [28.61733623671907, -106.07211103396628],
+      ];
+
+      // Polígono inverso para difuminar afuera
+      var mundo = [
+        [
+          [-90, -180],
+          [-90, 180],
+          [90, 180],
+          [90, -180],
+        ],
+        areaGrande,
+      ];
+
+      L.polygon(mundo, {
+        color: "gray",
+        weight: 0,
+        fillOpacity: 0.5,
+        interactive: false,
+      }).addTo(map);
+
+      // Polígono de área grande visible (solo borde)
+      L.polygon(areaGrande, {
+        color: "black",
+        weight: 3,
+        dashArray: "5,5",
+        fillOpacity: 0.05,
+      }).addTo(map);
+
+      // No usamos fitBounds para que no cambie el zoom exageradamente
+      // map.fitBounds(areaGrande);
+
+      // 6. Función para moverse a un territorio específico
+      function irATerritorio(numero) {
+        var poly = poligonos[numero - 1];
+        map.fitBounds(poly.getBounds());
+      }
     </script>
-
-</body>
-
+  </body>
 </html>
