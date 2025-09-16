@@ -7,6 +7,8 @@ var coordsAreaGrande = [
 ];
 
 var mundo = [[[-90,-180],[-90,180],[90,180],[90,-180]], coordsAreaGrande];
-L.polygon(mundo,{color:"gray",weight:0,fillOpacity:0.5,interactive:false}).addTo(map);
+L.polygon(mundo, {color:"gray", weight:0, fillOpacity:0.5, interactive:false}).addTo(map);
 
-var areaGrande = L.polygon(coordsAreaGrande,{color:"black",weight:3,dashArray:"5,5",fillOpacity:0.05}).addTo(map);
+var areaGrande = L.polygon(coordsAreaGrande, {
+  color:"black", weight:3, dashArray:"5,5", fillOpacity:0.05
+}).addTo(map);
